@@ -8,7 +8,8 @@ public class number_gussingGeam {
     private static int randomNumber;
     public static void main(String[] args) {
         System.out.println("Hallo, heute spielen wir ein kleines Zahlenraten spiel.");
-        playerVsPc();
+        pcVsPlayer();
+        //playerVsPc();
     }
     //The player vs pc method
     private static void playerVsPc(){
@@ -23,7 +24,10 @@ public class number_gussingGeam {
             counter++;
             System.out.println("Next guess:");
             int guess = scanner.nextInt();
-            isGuessed =  checkNumber(guess);
+            int isGuessedInt = checkNumber(guess);
+            if(isGuessedInt == 1){
+                isGuessed = true;
+            }
         }
         System.out.println("You have guessed " + counter + " times.");
     }
@@ -34,7 +38,7 @@ public class number_gussingGeam {
         int max = scanner.nextInt();
         return max;
     }
-    //craet a pc vs player method
+    //create a pc vs player method
     private static void pcVsPlayer(){
         Scanner scanner = new Scanner(System.in);
         int max = 30;
@@ -42,16 +46,17 @@ public class number_gussingGeam {
         int counter = 0;
         int think;
         System.out.println("please think to a number between " + min + " and " + max); 
-        randomNumber = sc.nextInt();
+        randomNumber = randomNumber(max);
         System.out.println("I have my random number. You have to guess it.");
         System.out.println("I have set the range from 1 to " + max);
         boolean isGuessed = false;
     
         while(!isGuessed){
             counter++;
-            System.out.println("Next guess:");
-            int guess = guessNumber(max, min);   //todo: crate an algorithm to guess the number
-            think =  checkNumber(guess);
+            System.out.println("Now I say you my guss type 1 if the number is true; type 2 if the number is to big; type 3 if the number is to low:");
+            int guess = guessNumber(max, min);  //todo: crate an algorithm to guess the number
+            System.out.println("Next guess: " + guess);
+            think =  scanner.nextInt();
             if(think == 1 ){
                 isGuessed = true;
             }else if(think == 2){
@@ -63,6 +68,7 @@ public class number_gussingGeam {
             }
         }
         System.out.println("You have guessed " + counter + " times.");
+        scanner.close();
     }
     //the algorithm to guess the number
     private static int guessNumber(int max, int min){
