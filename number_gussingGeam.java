@@ -1,6 +1,5 @@
+import java.util.InputMismatchException;
 import java.util.Scanner;
-
-import javax.swing.SwingConstants;
 
 /**
  * number_gussingGeam
@@ -15,8 +14,12 @@ public class number_gussingGeam {
         Scanner scanner = new Scanner(System.in);
         int typeOfPLay = -1;
         while (play) {
-            System.out.println("(1) pc Vs.Player\n(2) Player Vs.Player\n(3) pc Vs.pc\n(4) Exit");
-            typeOfPLay = scanner.nextInt();
+            System.out.println("(1) pc Vs.Player\n(2) Player Vs.pc\n(3) pc Vs.pc\n(4) Exit");
+            try {
+                typeOfPLay = scanner.nextInt();
+            } catch (InputMismatchException e) {
+                typeOfPLay = -1;
+            }
             switch (typeOfPLay) {
                 case 1:
                     pcVsPlayer();
@@ -25,8 +28,8 @@ public class number_gussingGeam {
                     playerVsPc();
                     break;
                 case 3:
-                    System.out.println("not yet");
-                    // pcVsPc();
+                    System.out.println("not finsihed");
+                    pcVsPc();
                     break;
                 case 4:
                     play = false;
@@ -37,41 +40,115 @@ public class number_gussingGeam {
                     break;
             }
         }
+        scanner.close();
     }
 
     // The player vs pc method
     private static void playerVsPc() {
+        boolean play = true;
         Scanner scanner = new Scanner(System.in);
-        int max = userSetUp();
-        int counter = 0;
-        randomNumber(max);
-        System.out.println("I have my random number. You have to guess it.");
-        System.out.println("I have set the range from 1 to " + max);
-        boolean isGuessed = false;
-        while (!isGuessed) {
-            counter++;
-            System.out.println("Next guess:");
-            int guess = scanner.nextInt();
-            isGuessed = checkNumber(guess);
+        while (play) {
+
+            System.out.println("please enter a high Level");
+            int max = userSetUp();
+            int counter = 0;
+            randomNumber(max);
+            System.out.println("I have my random number. You have to guess it.");
+            System.out.println("I have set the range from 1 to " + max);
+            boolean isGuessed = false;
+            while (!isGuessed) {
+                counter++;
+                System.out.println("Next guess:");
+                int guess = scanner.nextInt();
+                isGuessed = checkNumber(guess);
+            }
+            System.out.println("You have guessed " + counter + " times.");
+            System.out.println("Do you want to play again? (y/n)");
+            String answer = scanner.next();
+            if (answer.equals("y")) {
+                play = true;
+            } else if (answer.equals("n")) {
+                play = false;
+            } else {
+                System.out.println("invalid input we do not play agian");
+            }
         }
-        System.out.println("You have guessed " + counter + " times.");
+        // scanner.close();
     }
 
     // The userSetUp method
     public static int userSetUp() {
         Scanner scanner = new Scanner(System.in);
-        System.out.println("I choose now my number, please enter a high level number!");
-        int max = scanner.nextInt();
+        int max;
+        try {
+            max = scanner.nextInt();
+        } catch (InputMismatchException e) {
+            System.out.println("invalid input");
+            max = userSetUp();
+        }
+        // scanner.close();
         return max;
     }
 
     // craet a pc vs player method
     private static void pcVsPlayer() {
-        Scanner scanner = new Scanner(System.in);
+        boolean play = true;
+        while (play) {
+            Scanner scanner = new Scanner(System.in);
+            int max = (int) Math.floor(Math.random() * (10 - 1) + 1) * 10;
+            int min = 0;
+            int counter = 0;
+            int think;
+            System.out.println("please think to a number between " + min + " and " + max);
+            System.out.println("I have my random number. You have to guess it.");
+            System.out.println("I have set the range from 1 to " + max);
+            boolean isGuessed = false;
+
+            while (!isGuessed) {
+                counter++;
+                System.out.println(
+                        "type 1 if the guss is the number\ntype 2 if the guss is higher\ntype 3 if the guss is lower");
+                int guess = (max - min) / 2 + min; // todo: crate an algorithm to guess the number
+                System.out.println("I think to " + guess);
+                try {
+                    think = scanner.nextInt();
+                } catch (InputMismatchException e) {
+                    think = -1;
+                    scanner = new Scanner(System.in);
+                }
+                if (think == 1) {
+                    isGuessed = true;
+                } else if (think == 2) {
+                    min = guess;
+                } else if (think == 3) {
+                    max = guess;
+                } else {
+                    System.out.println("Something went wrong");
+                }
+            }
+            System.out.println("You have guessed " + counter + " times.");
+            System.out.println("Do you want to play again? (y/n)");
+            String answer = scanner.next();
+            if (answer.equals("y")) {
+                play = true;
+            } else if (answer.equals("n")) {
+                play = false;
+            } else {
+                play = false;
+                System.out.println("invalid input we do not play agian");
+            }
+            // scanner.close();
+        }
+
+    }
+
+    // create a pc vs pc method
+    private static void pcVsPc() {
         int max = (int) Math.floor(Math.random() * (10 - 1) + 1) * 10;
         int min = 0;
         int counter = 0;
         int think;
+        randomNumber(max);
         System.out.println("please think to a number between " + min + " and " + max);
         System.out.println("I have my random number. You have to guess it.");
         System.out.println("I have set the range from 1 to " + max);
@@ -79,11 +156,11 @@ public class number_gussingGeam {
 
         while (!isGuessed) {
             counter++;
-            System.out.println(
-                    "type 1 if the guss is the number\ntype 2 if the guss is higher\ntype 3 if the guss is lower");
+            wait(400);
             int guess = (max - min) / 2 + min; // todo: crate an algorithm to guess the number
             System.out.println("I think to " + guess);
-            think = scanner.nextInt();
+            wait(300);
+            think = chechNumber(guess, true);
             if (think == 1) {
                 isGuessed = true;
             } else if (think == 2) {
@@ -91,17 +168,36 @@ public class number_gussingGeam {
             } else if (think == 3) {
                 max = guess;
             } else {
+                wait(50);
                 System.out.println("Something went wrong");
             }
         }
-        System.out.println("You have guessed " + counter + " times.");
+        System.out.println("The PC gussed the number in: " + counter + " times.");
     }
 
-    // the algorithm to guess the number
-    private static int guessNumber(int max, int min) {
-        int spock = (max + min) / 2;
-        int guess = min + spock;
-        return guess;
+    private static int chechNumber(int guess, boolean isPC) {
+        if (guess == randomNumber) {
+            System.out.println("You won!");
+            return 1;
+        } else if (guess > randomNumber) {
+            System.out.println("Your number is too high!");
+            return 3;
+        } else if (guess < randomNumber) {
+            System.out.println("Your number is too low!");
+            return 2;
+        } else {
+            System.out.println("You have entered an invalid number!");
+            return 4;
+        }
+    }
+
+    // Create a method to wait for a time
+    private static void wait(int time) {
+        try {
+            Thread.sleep(time);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
     }
 
     // create a random number
@@ -129,5 +225,4 @@ public class number_gussingGeam {
     }
     // Creatin a method to check if the input is the number is correct number with
     // an input
-
 }
