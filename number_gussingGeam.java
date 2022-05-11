@@ -10,47 +10,59 @@ public class number_gussingGeam {
 
     public static void main(String[] args) {
         System.out.println("Hallo, heute spielen wir ein kleines Zahlenraten spiel.");
-        boolean play = true;
         Scanner scanner = new Scanner(System.in);
-        int typeOfPLay = -1;
-        while (play) {
-            System.out.println("(1) pc Vs.Player\n(2) Player Vs.pc\n(3) pc Vs.pc\n(4) Exit");
-            try {
-                typeOfPLay = scanner.nextInt();
-            } catch (InputMismatchException e) {
-                typeOfPLay = -1;
-            }
-            switch (typeOfPLay) {
-                case 1:
-                    pcVsPlayer();
-                    break;
-                case 2:
-                    playerVsPc();
-                    break;
-                case 3:
-                    System.out.println("not finsihed");
-                    pcVsPc();
-                    break;
-                case 4:
-                    play = false;
-                    System.out.println("Bye");
-                    break;
-                default:
-                    System.out.println("invalid input");
-                    break;
-            }
-        }
+        boolean play = true;
+        while (play){
+            play = userInput(scanner) ;
+        } 
         scanner.close();
     }
 
+
+    private static boolean userInput(Scanner scanner){
+        int typeOfPLay = -1;
+        boolean endGeam;
+        System.out.println("(1) pc Vs.Player\n(2) Player Vs.pc\n(3) pc Vs.pc\n(4) Exit");
+        try {
+            typeOfPLay = scanner.nextInt();
+        } catch (InputMismatchException e) {
+            typeOfPLay = -1;
+        }
+        switch (typeOfPLay) {
+            case 1:
+                pcVsPlayer();
+                endGeam = true;
+                break;
+            case 2:
+                playerVsPc(scanner);
+                endGeam =  true;
+                break;
+            case 3:
+                //System.out.println("not finsihed");
+                pcVsPc();
+                endGeam = true;
+                break;
+            case 4:
+                //play = false;
+                System.out.println("Bye");
+                endGeam = false;
+                break;
+            default:
+                System.out.println("invalid input");
+                endGeam = true;
+                break;
+        }
+        return endGeam;
+    }
+
     // The player vs pc method
-    private static void playerVsPc() {
+    private static void playerVsPc(Scanner scanner) {
         boolean play = true;
-        Scanner scanner = new Scanner(System.in);
+        //Scanner scanner = new Scanner(System.in);
         while (play) {
 
             System.out.println("please enter a high Level");
-            int max = userSetUp();
+            int max = userSetUp(scanner);
             int counter = 0;
             randomNumber(max);
             System.out.println("I have my random number. You have to guess it.");
@@ -77,14 +89,14 @@ public class number_gussingGeam {
     }
 
     // The userSetUp method
-    public static int userSetUp() {
-        Scanner scanner = new Scanner(System.in);
+    public static int userSetUp(Scanner scanner) {
+        
         int max;
         try {
             max = scanner.nextInt();
         } catch (InputMismatchException e) {
             System.out.println("invalid input");
-            max = userSetUp();
+            max = userSetUp(scanner);
         }
         // scanner.close();
         return max;
@@ -106,9 +118,8 @@ public class number_gussingGeam {
 
             while (!isGuessed) {
                 counter++;
-                System.out.println(
-                        "type 1 if the guss is the number\ntype 2 if the guss is higher\ntype 3 if the guss is lower");
-                int guess = (max - min) / 2 + min; // todo: crate an algorithm to guess the number
+                System.out.println("type 1 if the guss is the number\ntype 2 if the guss is higher\ntype 3 if the guss is lower");
+                int guess = (max - min) / 2 + min;
                 System.out.println("I think to " + guess);
                 try {
                     think = scanner.nextInt();
@@ -127,19 +138,22 @@ public class number_gussingGeam {
                 }
             }
             System.out.println("You have guessed " + counter + " times.");
-            System.out.println("Do you want to play again? (y/n)");
-            String answer = scanner.next();
-            if (answer.equals("y")) {
-                play = true;
-            } else if (answer.equals("n")) {
-                play = false;
-            } else {
-                play = false;
-                System.out.println("invalid input we do not play agian");
-            }
-            // scanner.close();
+            play = playAgian(scanner);
         }
-
+    }
+    
+    private static boolean playAgian(Scanner scanner){
+        System.out.println("Do you want to play again? (y/n)");
+        String answer = scanner.next();
+        if (answer.equals("y")) {
+            return true;
+        } else if (answer.equals("n")) {
+            return  false;
+        } else {
+            System.out.println("invalid input we do not play agian");
+            return false;
+            
+        }
     }
 
     // create a pc vs pc method
